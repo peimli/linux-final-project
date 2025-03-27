@@ -9,12 +9,13 @@ const app = express();
 app.use(cors());
 
 // Database credentials - make sure you don't store sensitive information here in plain text!
+
 const db = mysql.createConnection({
-    host: 'MYSQL_HOST',
-    user: 'MYSQL_USER',
-    password: 'MYSQL_PASSWORD',
-    database: 'MYSQL_DATABASE',
-    port: '3306',
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
+    port: 3306,
 });
 
 db.connect((err) => {
@@ -59,4 +60,4 @@ app.get('/top-scores', (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
-});
+})

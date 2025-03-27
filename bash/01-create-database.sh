@@ -11,13 +11,13 @@ DB_PASS="adminpassword"
 echo "Connecting to RDS and creating table..."
 
 mysql -h "$RDS_ENDPOINT" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
-CREATE TABLE IF NOT EXISTS score (
-  id INT PRIMARY KEY,
-  name TEXT,
-  score INT,
-  difficulty INT
+CREATE TABLE scores (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(3) NOT NULL,
+  difficulty INT NOT NULL,
+  score INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
 INSERT INTO score VALUES (1, 'Zoltán', 9999, 3)
   ON DUPLICATE KEY UPDATE name=VALUES(name), score=VALUES(score), difficulty=VALUES(difficulty);
 

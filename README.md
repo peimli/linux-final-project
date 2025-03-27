@@ -16,3 +16,69 @@ Before starting to work on the project, check the code and try to understand wha
 In case of questions about this project, you can reach me at the following e-mail address:
 
 Mate Torma: mate.torma@nixs.com
+
+##  Tech Stack
+
+| Component     | Tool/Service                 |
+|---------------|------------------------------|
+| **Cloud**      | AWS (EC2, RDS, S3)           |
+| **Infra as Code** | Terraform                   |
+| **Configuration Mgmt** | Ansible               |
+| **App Runtime** | Docker + docker-compose     |
+| **Web Server** | Nginx (reverse proxy)        |
+| **Database**   | Amazon RDS (MySQL 8.0)       |
+| **Backup**     | Systemd timer + S3 upload    |
+
+---
+
+##  Features
+
+-  **Infrastructure provisioning** via Terraform
+-  **EC2 Ubuntu server** for app hosting
+-  **RDS MySQL** database for storing game scores
+-  **Daily database backups** to S3 using systemd timers
+-  **Dockerized frontend and backend**
+-  **Ansible automation** to install Docker, deploy containers, and configure system services
+-  **Nginx reverse proxy** to expose the app cleanly on port 80
+
+---
+
+## How to deploy?
+
+-   **git clone**
+-   **cd terraform**
+-   **terraform init**
+-   **terraform apply**
+This will:
+
+    🔸 Create an EC2 instance (Ubuntu)
+
+    🔸 Launch an RDS MySQL database
+
+    🔸 Create an S3 bucket for backups
+
+    🔸 Generate and import an SSH key
+
+    🔸 Output values such as the public IP, RDS endpoint, and S3 bucket name
+3. Update Ansible Variables:
+    - **ansible/inventory.ini** Update the EC2 IP address from Terraform output
+    - **ansible/docker-compose.yml** Update environment variables for the backend container using Terraform outputs:
+ 4. Run Ansible Playbook:
+    -   cd ../ansible
+    - ansible-playbook -i inventory.ini playbook.yml
+    This will:
+
+    Install Docker + Docker Compose on the EC2 server
+
+    Deploy the frontend and backend containers
+
+    Configure Nginx as a reverse proxy
+
+    Copy the backup script
+
+    Register a systemd timer to back up your DB to S3 daily
+
+5. Access Your App:
+    - Open a browser and go to:
+    **http://<your-ec2-public-ip>**
+

@@ -64,37 +64,94 @@
         group: ubuntu
         mode: '0644'
 
-    - name: Start the containers
-      command: docker-compose up -d
-      args:
-        chdir: /home/ubuntu
-
-    - name: Copy backup script to EC2
+    - name: Copy frontend source code
       copy:
-        src: 02-backup-score.sh
-        dest: /home/ubuntu/02-backup-score.sh
+        src: ../docker/frontend/
+        dest: /home/ubuntu/frontend/
         owner: ubuntu
         group: ubuntu
         mode: '0755'
 
+    - name: Copy Nginx config
+      copy:
+        src: nginx.conf
+        dest: /home/ubuntu/nginx.conf
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+
+    - name: Copy backend source code
+      copy:
+        src: ../docker/backend/
+        dest: /home/ubuntu/backend/
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+
+    - name: Stop all running containers
+      shell: |
+         docker stop $(docker ps -aq) || true
+      ignore_errors: yes
+
+    - name: Remove all containers
+      shell: |
+        docker rm $(docker ps -aq) || true
+      ignore_errors: yes
+
+    - name: Remove broken backend image if exists
+      shell: |
+         docker rmi ubuntu_backend || true
+      ignore_errors: yes
+
+    - name: Remove dangling Docker volumes
+      shell: |
+        docker volume prune -f
+      ignore_errors: yes
+
+
+
+    - name: Start the containers
+      command: docker-compose up -d --build --remove-orphans
+      args:
+        chdir: /home/ubuntu
+    - name: Ensure /opt/scripts directory exists
+      file:
+        path: /opt/scripts
+        state: directory
+        mode: '0755'
+    - name: Install MySQL client (for mysqldump)
+      apt:
+        name: mariadb-client
+        state: present
+      become: yes
+
+    - name: Install AWS CLI
+      apt:
+        name: awscli
+        state: present
+      become: yes
+
+
+    - name: Copy backup script
+      copy:
+        src: 02-backup-score.sh
+        dest: /opt/scripts/02-backup-score.sh
+        mode: '0755'
+
     - name: Copy systemd service file
       copy:
-        src: score-backup.service
-        dest: /etc/systemd/system/score-backup.service
+        src: backup-score.service
+        dest: /etc/systemd/system/backup-score.service
         mode: '0644'
 
     - name: Copy systemd timer file
       copy:
-        src: score-backup.timer
-        dest: /etc/systemd/system/score-backup.timer
+        src: backup-score.timer
+        dest: /etc/systemd/system/backup-score.timer
         mode: '0644'
-
-    - name: Reload systemd
-      systemd:
-        daemon_reload: yes
 
     - name: Enable and start backup timer
       systemd:
-        name: score-backup.timer
+        name: backup-score.timer
         enabled: yes
         state: started
