@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  backend:
+    image: python:3.11
+    container_name: backend
+    volumes:
+      - ./backend:/app
+    working_dir: /app
+    command: python3 app.py
+    environment:
+      - DB_HOST=serpent-db.c1yqesg669dd.eu-central-1.rds.amazonaws.com
+      - DB_USER=admin
+      - DB_PASS=adminpassword
+      - DB_NAME=serpent_surge_db
+
+  frontend:
+    image: nginx:alpine
+    container_name: frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
