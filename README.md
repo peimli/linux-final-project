@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Serpent Surge
 ## Description
 **Serpent Surge** is a demonstration project for the practical part of the Nix DevOps workshops. The candidates need to work on this project, to improve their practical skills after the theoretical parts.
@@ -82,3 +83,7 @@ This will:
     - Open a browser and go to:
     **http://<your-ec2-public-ip>**
 
+=======
+# linux-final-project
+>>>>>>> dfa5da41ce6d6eec20b509939e2efc85b0f49a05
+linux-final-project
