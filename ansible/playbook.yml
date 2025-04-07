@@ -55,13 +55,10 @@
         path: /usr/local/bin/docker-compose
         mode: '0755'
         state: file
-
     - name: Copy docker-compose.yml
-      copy:
-        src: docker-compose.yml
+      template:
+        src: docker-compose.yml.j2
         dest: /home/ubuntu/docker-compose.yml
-        owner: ubuntu
-        group: ubuntu
         mode: '0644'
 
     - name: Copy frontend source code
@@ -131,10 +128,19 @@
         state: present
       become: yes
 
-
-    - name: Copy backup script
+    - name: Copy DB init script
       copy:
-        src: 02-backup-score.sh
+        src: 01-create-database.sh
+        dest: /opt/scripts/01-create-database.sh
+        mode: '0755'
+
+    - name: Run DB init script
+      command: /opt/scripts/01-create-database.sh
+
+
+    - name: Template the backup script with vars
+      template:
+        src: backup-script.sh.j2
         dest: /opt/scripts/02-backup-score.sh
         mode: '0755'
 

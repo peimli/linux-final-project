@@ -1,8 +1,5 @@
 #!/bin/bash
-# Save this as: bash/01-create-database.sh
-
-# --- CONFIGURATION ---
-RDS_ENDPOINT="serpent-db.c1yqesg669dd.eu-central-1.rds.amazonaws.com"
+RDS_ENDPOINT="{{ rds_endpoint.value.split(':')[0] }}"
 DB_NAME="serpent_surge_db"
 DB_USER="admin"
 DB_PASS="adminpassword"
@@ -18,7 +15,7 @@ CREATE TABLE IF NOT EXISTS score (
   difficulty INT
 );
 
-INSERT INTO score VALUES (1, 'Zoltán', 9999, 3)
+INSERT INTO score VALUES (1, 'asd', 99, 3)
   ON DUPLICATE KEY UPDATE name=VALUES(name), score=VALUES(score), difficulty=VALUES(difficulty);
 
 SELECT * FROM score;
