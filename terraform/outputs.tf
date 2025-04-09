@@ -18,3 +18,16 @@ output "ssh_private_key" {
   value       = tls_private_key.ssh_key.private_key_pem
   sensitive   = true
 }
+
+output "db_user" {
+  value = var.db_user
+}
+
+output "db_password" {
+  value = var.db_password
+  sensitive = true
+}
+
+output "db_name" {
+  value = var.db_name
+}
