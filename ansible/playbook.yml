@@ -127,32 +127,29 @@
         name: awscli
         state: present
       become: yes
-
     - name: Copy DB init script
       copy:
-        src: 01-create-database.sh
+        src: ../bash/01-create-database.sh
         dest: /opt/scripts/01-create-database.sh
         mode: '0755'
 
     - name: Run DB init script
       command: /opt/scripts/01-create-database.sh
 
-
-    - name: Template the backup script with vars
+    - name: Template backup script with Terraform vars
       template:
-        src: backup-script.sh.j2
+        src: ../bash/backup-script.sh.j2
         dest: /opt/scripts/02-backup-score.sh
         mode: '0755'
-
+        
     - name: Copy systemd service file
       copy:
-        src: backup-score.service
+        src: ../bash/backup-score.service
         dest: /etc/systemd/system/backup-score.service
         mode: '0644'
-
     - name: Copy systemd timer file
       copy:
-        src: backup-score.timer
+        src: ../bash/backup-score.timer
         dest: /etc/systemd/system/backup-score.timer
         mode: '0644'
 

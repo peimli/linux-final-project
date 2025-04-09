@@ -1,11 +1,12 @@
 #!/bin/bash
+set -euo pipefail
 set -e
 echo "[$(date)] 🔄 Starting DB backup..."
 
-MYSQL_HOST="{{ rds_endpoint.value.split(':')[0] }}"
-MYSQL_USER="admin"
-MYSQL_PASSWORD="adminpassword"
-MYSQL_DATABASE="serpent_surge_db"
+MYSQL_HOST="{{ rds_endpoint.value | regex_replace(':.*$', '') }}"
+MYSQL_USER="{{ db_user.value }}"
+MYSQL_PASSWORD="{{ db_password.value }}"
+MYSQL_DATABASE="{{ db_name.value }}"
 S3_BUCKET="{{ s3_bucket_name.value }}"
 
 DUMP_DIR="/opt/backups"

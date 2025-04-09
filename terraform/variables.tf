@@ -1,6 +1,22 @@
-variable "aws_region" {
-  description = "The AWS region to deploy resources in"
-  default     = "us-east-1"
+# EC2 and SSH
+variable "key_pair_name" {
+  description = "Name of the EC2 key pair"
+  type        = string
+  default     = "serpent-surge-key"
+}
+
+# Database settings
+variable "db_user" {
+  description = "Username for the RDS database"
+  type        = string
+  default     = "admin"
+}
+
+variable "db_password" {
+  description = "Password for the RDS database"
+  type        = string
+  default     = "adminpassword"
+  sensitive   = true
 }
 
 variable "db_name" {
@@ -9,13 +25,16 @@ variable "db_name" {
   default     = "serpent_surge_db"
 }
 
-variable "db_username" {
-  description = "Master username for the database"
+# AWS region
+variable "aws_region" {
+  description = "AWS region to deploy resources"
   type        = string
-  default     = "admin"
+  default     = "eu-central-1"
 }
 
-variable "db_password" {
-  description = "Password for the MySQL admin user"
-  default     = "adminpassword"
+# Optional if you want to customize bucket name
+variable "s3_bucket_prefix" {
+  description = "Prefix for S3 bucket name"
+  type        = string
+  default     = "serpent-surge-backups"
 }
