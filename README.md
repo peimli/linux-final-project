@@ -111,20 +111,41 @@ To remove all AWS resources:
 cd terraform
 terraform destroy
 
-Next Steps
+The following parts are already completed:
 
-Add authentication or basic input validation to API endpoints (for security)
+- ✅ Infrastructure deployed with Terraform (EC2, RDS, S3)
+- ✅ Full application setup with Ansible
+- ✅ MySQL RDS integration
+- ✅ Database backup script uploads to S3
+- ✅ Backups automatically rotate (keeps only latest 3)
+- ✅ One-click deploy script via `deploy.sh`
 
-Set up HTTPS (SSL certificate via Let's Encrypt or similar)
+---
 
-Add monitoring (CloudWatch, or a self-hosted option like Prometheus)
+The following parts are still **in progress or missing**:
 
-Container image hardening (multi-stage builds, non-root users)
+- ⬜ **CI/CD Pipeline**
+  - Create `.gitlab-ci.yml`
+  - Split image build into separate frontend/backend jobs
+  - Add deployment job(s) to push images to EC2
+  - Trigger pipeline on push to `main`
 
-Backup encryption and integrity verification
+- ⬜ **Database initialization via Ansible**
+  - Make sure `01-create-database.sh` runs and creates the `scores` table automatically
 
-Improve error handling in Ansible playbooks and bash scripts
+- ⬜ **Architecture Diagram**
+  - Visual diagram showing EC2, RDS, S3, Docker containers
+  - Tool recommended: [draw.io](https://draw.io)
 
-Write tests for backend logic and API
+- ⬜ **Code cleanup**
+  - Refactor playbook
+  - Remove unused files (e.g. older backup script)
+  - Review Dockerfile size
 
-Add user management for the game (optional extension)
+- ⬜ **(Optional) Extra Improvements**
+  - Add Elastic Load Balancer
+  - Explore unknown AWS features
+  - Try building a full one-click setup for entire infra
+
+---
+
