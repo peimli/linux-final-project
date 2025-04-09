@@ -1,89 +1,130 @@
-<<<<<<< HEAD
-# Serpent Surge
-## Description
-**Serpent Surge** is a demonstration project for the practical part of the Nix DevOps workshops. The candidates need to work on this project, to improve their practical skills after the theoretical parts.
-## Forking the directory
-For working with this repository in the future, you'll need to fork the repository.
-1. At the upper-right corner, click on the *Fork* button
-2. Name can be the same
-3. Fork the repository under your **own namespace**. For example: dual-partnership/devops/DevOpsDual1/**<your_name>**/serpent-surge
-4. Copying only the main branch is fine
-5. Click on *Create fork*
+Serpent Surge – DevOps Final Project
 
-**Important:** in the future, make every necessary change to your fork only.
-## Note
-Before starting to work on the project, check the code and try to understand what is the purpose of each component.
-## Contact
-In case of questions about this project, you can reach me at the following e-mail address:
+This repository contains the final project for my DevOps course. The goal was to build and deploy a full-stack game application using Docker containers, hosted in a cloud environment (AWS), with infrastructure managed by Terraform and automation handled by Ansible.
 
-Mate Torma: mate.torma@nixs.com
+The application includes automated database backups to Amazon S3, using systemd timers.
+Project Overview
 
-##  Tech Stack
+Key Objectives:
 
-| Component     | Tool/Service                 |
-|---------------|------------------------------|
-| **Cloud**      | AWS (EC2, RDS, S3)           |
-| **Infra as Code** | Terraform                   |
-| **Configuration Mgmt** | Ansible               |
-| **App Runtime** | Docker + docker-compose     |
-| **Web Server** | Nginx (reverse proxy)        |
-| **Database**   | Amazon RDS (MySQL 8.0)       |
-| **Backup**     | Systemd timer + S3 upload    |
+    Deploy a browser-based game application
 
----
+    Use Terraform to provision AWS infrastructure (EC2, RDS, S3)
 
-##  Features
+    Use Ansible to configure the EC2 instance and deploy Docker-based frontend/backend
 
--  **Infrastructure provisioning** via Terraform
--  **EC2 Ubuntu server** for app hosting
--  **RDS MySQL** database for storing game scores
--  **Daily database backups** to S3 using systemd timers
--  **Dockerized frontend and backend**
--  **Ansible automation** to install Docker, deploy containers, and configure system services
--  **Nginx reverse proxy** to expose the app cleanly on port 80
+    Automate database backups to S3 with rotation
 
----
+    Ensure modular and repeatable infrastructure and configuration
 
-## How to deploy?
+Technologies Used
 
--   **git clone**
--   **cd terraform**
--   **terraform init**
--   **terraform apply**
+    Terraform: For provisioning AWS infrastructure
+
+    Ansible: For server configuration and application deployment
+
+    Docker & Docker Compose: To containerize and run the application
+
+    AWS Free Tier: EC2 (application host), RDS (MySQL database), S3 (backups)
+
+    Systemd: For scheduling database backups
+
+    GitHub / GitLab: Version control
+
+Project Structure
+
+final-project/
+├── terraform/     # AWS infrastructure (VPC, EC2, RDS, S3)
+├── ansible/       # Server configuration and deployment
+├── docker/        # Frontend and backend source code and Dockerfiles
+├── bash/          # Database creation and backup scripts
+
+How to Deploy
+1. Clone the Repository
+
+git clone https://github.com/peimli/linux-final-project.git
+cd linux-final-project
+
+2. Set Up AWS Credentials
+
+Ensure you have valid AWS credentials using:
+
+aws configure
+
+Use an account within the AWS Free Tier limits.
+3. Deploy Infrastructure and Configure Everything
+
+Run the deployment script:
+
+chmod +x deploy.sh
+./deploy.sh
+
 This will:
 
-    🔸 Create an EC2 instance (Ubuntu)
+    Create AWS resources via Terraform
 
-    🔸 Launch an RDS MySQL database
+    Extract required IPs and credentials from outputs
 
-    🔸 Create an S3 bucket for backups
+    Automatically apply Ansible playbook using the Terraform outputs
 
-    🔸 Generate and import an SSH key
+Application Access
 
-    🔸 Output values such as the public IP, RDS endpoint, and S3 bucket name
-3. Update Ansible Variables:
-    - **ansible/inventory.ini** Update the EC2 IP address from Terraform output
-    - **ansible/docker-compose.yml** Update environment variables for the backend container using Terraform outputs:
- 4. Run Ansible Playbook:
-    -   cd ../ansible
-    - ansible-playbook -i inventory.ini playbook.yml
-    This will:
+Once deployed:
 
-    Install Docker + Docker Compose on the EC2 server
+    Frontend: Visit http://<EC2_PUBLIC_IP> in your browser
 
-    Deploy the frontend and backend containers
+    Backend API:
 
-    Configure Nginx as a reverse proxy
+        Get top scores: http://<EC2_PUBLIC_IP>/top-scores
 
-    Copy the backup script
+        Save score: http://<EC2_PUBLIC_IP>/save-score
 
-    Register a systemd timer to back up your DB to S3 daily
+Replace <EC2_PUBLIC_IP> with the actual public IP output by Terraform.
+Database & Backups
 
-5. Access Your App:
-    - Open a browser and go to:
-    **http://<your-ec2-public-ip>**
+    Database: MySQL hosted in RDS
 
-=======
-# linux-final-project
->>>>>>> dfa5da41ce6d6eec20b509939e2efc85b0f49a05
-linux-final-project
+    Backups:
+
+        Daily backups using systemd timer
+
+        Stored in S3
+
+        Only the 3 most recent backups are retained
+
+To manually trigger a backup:
+
+sudo systemctl start backup-score.service
+
+To check backup timer:
+
+systemctl status backup-score.timer
+
+To review logs:
+
+journalctl -u backup-score.service
+
+To Destroy the Setup
+
+To remove all AWS resources:
+
+cd terraform
+terraform destroy
+
+Next Steps
+
+Add authentication or basic input validation to API endpoints (for security)
+
+Set up HTTPS (SSL certificate via Let's Encrypt or similar)
+
+Add monitoring (CloudWatch, or a self-hosted option like Prometheus)
+
+Container image hardening (multi-stage builds, non-root users)
+
+Backup encryption and integrity verification
+
+Improve error handling in Ansible playbooks and bash scripts
+
+Write tests for backend logic and API
+
+Add user management for the game (optional extension)
