@@ -1,5 +1,5 @@
 # Terraform junk
-terraform/.terraform/*
+terraform/.t*
 terraform/*.tfstate
 terraform/*.tfstate.backup
 terraform/*.tfvars
