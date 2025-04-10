@@ -29,7 +29,7 @@ variable "db_name" {
 variable "aws_region" {
   description = "AWS region to deploy resources"
   type        = string
-  default     = "eu-central-1"
+  default     = "us-east-1"
 }
 
 # Optional if you want to customize bucket name
